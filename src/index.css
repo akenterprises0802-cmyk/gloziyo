@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Statutory Print Setup: Legal Page Landscape (8.5 × 14 in / 215.9 × 355.6 mm) */
+@page {
+  size: legal landscape;
+  margin: 6mm 6mm 6mm 6mm;
+}
+
+@media print {
+  @page {
+    size: legal landscape;
+    margin: 6mm 6mm 6mm 6mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide navigation, toolbars, and non-printable elements */
+  header,
+  nav,
+  .no-print,
+  #topHeaderNav,
+  #activeViewTabBar,
+  #adminRoleBanner {
+    display: none !important;
+  }
+
+  /* Ensure table headers repeat cleanly on multi-page print */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+  }
+
+  /* Print table styles for Legal Landscape */
+  .form-d-print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .form-d-print-table th,
+  .form-d-print-table td {
+    border: 0.5pt solid #334155 !important;
+    padding: 2.5pt 1pt !important;
+    font-size: 6.5pt !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+  }
+}

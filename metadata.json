@@ -1,0 +1,6 @@
+{
+  "name": "Employee Management System",
+  "description": "Official Employee Management System for GLOZIYO SERVICES PRIVATE LIMITED - Statutory Compliance, Master Register, and Intake Desk.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
