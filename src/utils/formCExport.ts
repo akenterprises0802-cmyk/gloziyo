@@ -82,11 +82,14 @@ export function exportFormCToPDF(
   periodText: string,
   fileName = 'FORM_C_GLOZIYO_SERVICES.pdf'
 ) {
-  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  // Format: Legal landscape (14 x 8.5 inches = 355.6 x 215.9 mm)
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'legal' });
+  const pageWidth = doc.internal.pageSize.width; // 355.6 mm
+  const pageHeight = doc.internal.pageSize.height; // 215.9 mm
 
   // Top header banner
   doc.setFillColor(30, 41, 59); // Slate-900
-  doc.rect(0, 0, 297, 24, 'F');
+  doc.rect(0, 0, pageWidth, 24, 'F');
 
   doc.setFontSize(14);
   doc.setTextColor(255, 255, 255);
@@ -96,7 +99,7 @@ export function exportFormCToPDF(
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.text('STATUTORY REGISTER OF RECOVERY / DAMAGE / LOSS / FINES / ADVANCES / LOANS', 14, 16);
-  doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')}`, 297 - 14, 16, { align: 'right' });
+  doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')}`, pageWidth - 14, 16, { align: 'right' });
 
   // Establishment & Owner Info Block
   doc.setFontSize(10);
@@ -167,20 +170,20 @@ export function exportFormCToPDF(
       valign: 'middle',
     },
     columnStyles: {
-      0: { cellWidth: 14, halign: 'center' },
-      1: { cellWidth: 16, halign: 'center', fontStyle: 'bold' },
-      2: { cellWidth: 23, fontStyle: 'bold' },
-      3: { cellWidth: 18, halign: 'center' },
-      4: { cellWidth: 32 },
-      5: { cellWidth: 18, halign: 'center' },
-      6: { cellWidth: 16, halign: 'right', fontStyle: 'bold' },
-      7: { cellWidth: 22 },
-      8: { cellWidth: 24 },
-      9: { cellWidth: 12, halign: 'center' },
-      10: { cellWidth: 16, halign: 'center' },
-      11: { cellWidth: 16, halign: 'center' },
-      12: { cellWidth: 20, halign: 'center' },
-      13: { cellWidth: 24 },
+      0: { cellWidth: 16, halign: 'center' },
+      1: { cellWidth: 20, halign: 'center', fontStyle: 'bold' },
+      2: { cellWidth: 28, fontStyle: 'bold' },
+      3: { cellWidth: 22, halign: 'center' },
+      4: { cellWidth: 38 },
+      5: { cellWidth: 22, halign: 'center' },
+      6: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },
+      7: { cellWidth: 26 },
+      8: { cellWidth: 28 },
+      9: { cellWidth: 16, halign: 'center' },
+      10: { cellWidth: 20, halign: 'center' },
+      11: { cellWidth: 20, halign: 'center' },
+      12: { cellWidth: 24, halign: 'center' },
+      13: { cellWidth: 28 },
     },
     didDrawPage: (data) => {
       // Signature footer
@@ -195,7 +198,7 @@ export function exportFormCToPDF(
       );
       doc.text(
         'Signature of Employer / Authorized Signatory: __________________________',
-        297 - 14,
+        pageWidth - 14,
         pageHeight - 6,
         { align: 'right' }
       );

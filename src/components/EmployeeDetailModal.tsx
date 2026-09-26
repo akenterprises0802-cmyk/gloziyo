@@ -126,6 +126,11 @@ export const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
                   {employee.designation}
                 </span>
+                {employee.department && (
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-200">
+                    Dept: {employee.department}
+                  </span>
+                )}
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                   {employee.category}
                 </span>
@@ -153,6 +158,10 @@ export const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                 <div>
                   <span className="font-semibold text-slate-800">Date of Joining: </span>
                   <span>{employee.doj}</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-slate-800">Department: </span>
+                  <span>{employee.department || 'Engineering'}</span>
                 </div>
                 <div>
                   <span className="font-semibold text-slate-800">Work Location: </span>

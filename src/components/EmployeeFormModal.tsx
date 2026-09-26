@@ -24,21 +24,33 @@ interface EmployeeFormModalProps {
 }
 
 const DESIGNATION_OPTIONS = [
-  'DEO',
-  'Helper',
-  'Fitter',
   'Welder',
-  'Supervisor',
-  'Project Manager',
-  'Trainee',
-  'Office Boy',
-  'Electrician',
-  'Quality Inspector',
-  'Site Engineer',
-  'Accountant',
+  'Fitter',
+  'Manager',
+  'Helper',
   'HR Executive',
-  'Driver',
-  'Security Guard'
+  'Marketing Manager',
+  'Project Manager',
+  'Supervisor',
+  'Data Entry Operator',
+  'Office Boy',
+  'Sweeper',
+  'House Keeping Staff'
+];
+
+const DEPARTMENT_OPTIONS = [
+  'Engineering',
+  'Admin',
+  'Site',
+  'HR',
+  'Operation'
+];
+
+const EMPLOYMENT_TYPE_OPTIONS = [
+  'Permanent',
+  'Contract',
+  'Daily Wages',
+  'Short time'
 ];
 
 const EDUCATION_OPTIONS = [
@@ -71,7 +83,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     nationality: 'Indian',
     education: '12th',
     doj: new Date().toISOString().split('T')[0],
-    designation: 'DEO',
+    department: 'Engineering',
+    designation: 'Welder',
     category: 'Skilled',
     employmentType: 'Permanent',
     mobile: '',
@@ -92,7 +105,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     photo: '',
     signature: '',
     remarks: '',
-    jobLocation: 'Main Plant',
+    jobLocation: 'Site Office',
   });
 
   const [sameAddress, setSameAddress] = useState(false);
@@ -122,7 +135,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
         nationality: 'Indian',
         education: 'Graduate',
         doj: new Date().toISOString().split('T')[0],
-        designation: 'Fitter',
+        department: 'Engineering',
+        designation: 'Welder',
         category: 'Skilled',
         employmentType: 'Permanent',
         mobile: '',
@@ -143,7 +157,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
         photo: '',
         signature: '',
         remarks: '',
-        jobLocation: 'Workshop Unit 1',
+        jobLocation: 'Site Office',
       });
       setSameAddress(false);
     }
@@ -203,6 +217,9 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     if (!formData.empCode?.trim()) newErrors.empCode = 'Employee code is required';
     if (!formData.name?.trim()) newErrors.name = 'First name is required';
     if (!formData.surname?.trim()) newErrors.surname = 'Surname is required';
+    if (!formData.department?.trim()) newErrors.department = 'Department is required';
+    if (!formData.designation?.trim()) newErrors.designation = 'Designation is required';
+    if (!formData.jobLocation?.trim()) newErrors.jobLocation = 'Job location is required';
     if (!formData.mobile?.trim()) {
       newErrors.mobile = 'Mobile number is required';
     } else if (!/^\d{10}$/.test(formData.mobile.replace(/\s+/g, ''))) {
@@ -213,6 +230,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
     if (Object.keys(newErrors).length > 0) {
       if (newErrors.empCode || newErrors.name || newErrors.surname) {
         setActiveTab('basic');
+      } else if (newErrors.department || newErrors.designation || newErrors.jobLocation) {
+        setActiveTab('job');
       } else if (newErrors.mobile) {
         setActiveTab('statutory');
       }
@@ -236,7 +255,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       nationality: formData.nationality || 'Indian',
       education: formData.education || 'Graduate',
       doj: formData.doj || '',
-      designation: formData.designation || 'DEO',
+      department: formData.department?.trim() || 'Engineering',
+      designation: formData.designation?.trim() || 'Welder',
       category: formData.category || 'Skilled',
       employmentType: formData.employmentType || 'Permanent',
       mobile: formData.mobile?.trim() || '',
@@ -257,12 +277,17 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
       photo: formData.photo || '',
       signature: formData.signature || '',
       remarks: formData.remarks?.trim() || '',
-      jobLocation: formData.jobLocation?.trim() || '',
+      jobLocation: formData.jobLocation?.trim() || 'Site Office',
       createdAt: employeeToEdit?.createdAt || new Date().toISOString(),
     };
 
     onSave(finalizedEmployee);
   };
+
+  // Dynamic lists preserving existing values if editing
+  const allDepartments = Array.from(new Set([...DEPARTMENT_OPTIONS, formData.department].filter(Boolean))) as string[];
+  const allDesignations = Array.from(new Set([...DESIGNATION_OPTIONS, formData.designation].filter(Boolean))) as string[];
+  const allEmploymentTypes = Array.from(new Set([...EMPLOYMENT_TYPE_OPTIONS, formData.employmentType].filter(Boolean))) as string[];
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
@@ -316,7 +341,10 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             }`}
           >
             <Briefcase className="w-3.5 h-3.5" />
-            <span>2. Job & Profile</span>
+            <span>2. Department, Designation & Employment Tenure</span>
+            {(errors.department || errors.designation || errors.jobLocation) && (
+              <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+            )}
           </button>
 
           <button
@@ -504,28 +532,99 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: JOB & PROFILE */}
+          {/* TAB 2: DEPARTMENT, DESIGNATION & EMPLOYMENT TENURE */}
           {activeTab === 'job' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Department * */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputDepartment">
+                  Department <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="inputDepartment"
+                  name="department"
+                  value={formData.department || 'Engineering'}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 ${
+                    errors.department ? 'border-red-400 focus:ring-red-200' : 'border-slate-300 focus:ring-slate-900'
+                  }`}
+                  required
+                >
+                  {allDepartments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+                {errors.department && <p className="text-[11px] text-red-600 mt-1">{errors.department}</p>}
+              </div>
+
+              {/* Designation * */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputDesignation">
-                  Designation
+                  Designation <span className="text-red-500">*</span>
                 </label>
                 <select
                   id="inputDesignation"
                   name="designation"
-                  value={formData.designation || 'DEO'}
+                  value={formData.designation || 'Welder'}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                  className={`w-full px-3 py-2 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 ${
+                    errors.designation ? 'border-red-400 focus:ring-red-200' : 'border-slate-300 focus:ring-slate-900'
+                  }`}
+                  required
                 >
-                  {DESIGNATION_OPTIONS.map((opt) => (
+                  {allDesignations.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt}
                     </option>
                   ))}
                 </select>
+                {errors.designation && <p className="text-[11px] text-red-600 mt-1">{errors.designation}</p>}
               </div>
 
+              {/* Type of Employment * Drop Down */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputEmploymentType">
+                  Type of Employment <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="inputEmploymentType"
+                  name="employmentType"
+                  value={formData.employmentType || 'Permanent'}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                  required
+                >
+                  {allEmploymentTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Job Location * */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputJobLocation">
+                  Job Location <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="inputJobLocation"
+                  type="text"
+                  name="jobLocation"
+                  value={formData.jobLocation || ''}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Mumbai Works Yard, Factory #2, Site Office"
+                  className={`w-full px-3 py-2 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 ${
+                    errors.jobLocation ? 'border-red-400 focus:ring-red-200' : 'border-slate-300 focus:ring-slate-900'
+                  }`}
+                  required
+                />
+                {errors.jobLocation && <p className="text-[11px] text-red-600 mt-1">{errors.jobLocation}</p>}
+              </div>
+
+              {/* Category */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputCategory">
                   Category
@@ -543,6 +642,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                 </select>
               </div>
 
+              {/* Date of Joining */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputDoj">
                   Date of Joining
@@ -557,21 +657,7 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputEmploymentType">
-                  Type of Employment
-                </label>
-                <input
-                  id="inputEmploymentType"
-                  type="text"
-                  name="employmentType"
-                  value={formData.employmentType || ''}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Permanent, Contract, Daily Wage"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
-                />
-              </div>
-
+              {/* Education */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputEducation">
                   Education
@@ -591,22 +677,8 @@ export const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
                 </select>
               </div>
 
+              {/* Service Book No */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputJobLocation">
-                  Job Location
-                </label>
-                <input
-                  id="inputJobLocation"
-                  type="text"
-                  name="jobLocation"
-                  value={formData.jobLocation || ''}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Mumbai Works Yard, Factory #2"
-                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
                 <label className="block text-xs font-semibold text-slate-700 mb-1" htmlFor="inputServiceBook">
                   Service Book No
                 </label>

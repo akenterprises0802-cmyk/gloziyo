@@ -240,10 +240,10 @@ export const FormCPage: React.FC<FormCPageProps> = ({
               id="btnFormCExportPDF"
               onClick={handleExportPDF}
               className="px-3 py-2 text-xs font-medium rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="Export Form C Statutory Register to PDF"
+              title="Export Form C Statutory Register to PDF (Legal Landscape 8.5 × 14 in)"
             >
               <FileText className="w-4 h-4 text-rose-400" />
-              <span>PDF</span>
+              <span>PDF (Legal Landscape)</span>
             </button>
 
             <button

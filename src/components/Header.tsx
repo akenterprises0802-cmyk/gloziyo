@@ -94,11 +94,11 @@ export const Header: React.FC<HeaderProps> = ({
 
           // Check if this option is disabled based on current logged in user:
           // When Viewer is logged in: Admin and HR Manager options are disabled
-          // When Employee is logged in: Admin and HR Manager options are disabled
+          // When Employee is logged in: Admin, HR Manager, and Viewer options are disabled
           // When HR Manager is logged in: Admin option is disabled
           const isRoleDisabled = 
             (currentUser.role === 'viewer' && (r === 'admin' || r === 'hr_manager')) ||
-            (currentUser.role === 'employee' && (r === 'admin' || r === 'hr_manager')) ||
+            (currentUser.role === 'employee' && (r === 'admin' || r === 'hr_manager' || r === 'viewer')) ||
             (currentUser.role === 'hr_manager' && r === 'admin');
 
           if (isRoleDisabled) {
@@ -119,6 +119,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="flex items-center gap-2 min-w-0">
                   {r === 'admin' && <Shield className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
                   {r === 'hr_manager' && <UserCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+                  {r === 'viewer' && <Eye className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
                   <div className="min-w-0">
                     <div className="font-semibold text-slate-500 flex items-center gap-1.5">
                       <span>{roleName}</span>
@@ -357,7 +358,7 @@ export const Header: React.FC<HeaderProps> = ({
                 id="btnExportPDFTop"
                 onClick={onExportPDF}
                 className="px-3 py-2 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer"
-                title="Export master register to PDF"
+                title="Export master register to PDF (Legal Landscape 8.5 × 14 in)"
               >
                 <FileText className="w-4 h-4 text-rose-400" />
                 <span className="hidden sm:inline">PDF</span>

@@ -9,6 +9,7 @@ export interface Employee {
   nationality: string;
   education: string;
   doj: string; // Date of Joining
+  department?: string;
   designation: string;
   category: 'Skilled' | 'Semi-Skilled' | 'Un Skilled' | string;
   employmentType: string;

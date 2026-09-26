@@ -69,7 +69,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     // 3. Search query
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
-      const combined = `${emp.empCode} ${emp.name} ${emp.surname} ${emp.mobile} ${emp.uan} ${emp.esic} ${emp.aadhar} ${emp.pan} ${emp.designation} ${emp.category} ${emp.jobLocation} ${emp.bank}`.toLowerCase();
+      const combined = `${emp.empCode} ${emp.name} ${emp.surname} ${emp.mobile} ${emp.uan} ${emp.esic} ${emp.aadhar} ${emp.pan} ${emp.department || ''} ${emp.designation} ${emp.category} ${emp.jobLocation} ${emp.bank}`.toLowerCase();
       if (!combined.includes(q)) return false;
     }
 
@@ -322,9 +322,16 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
                     {/* Designation & Category */}
                     <td className="py-2.5 px-3">
                       <div className="flex flex-col gap-1">
-                        <span className="font-medium text-slate-800">
-                          {emp.designation}
-                        </span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-medium text-slate-800">
+                            {emp.designation}
+                          </span>
+                          {emp.department && (
+                            <span className="text-[10px] bg-slate-100 text-slate-600 border border-slate-200 px-1.5 py-0.2 rounded font-medium">
+                              {emp.department}
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1.5">
                           <span
                             className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${

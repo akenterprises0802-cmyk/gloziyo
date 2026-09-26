@@ -220,7 +220,7 @@ export default function App() {
       return;
     }
 
-    if (currentUser.role === 'employee' && (newRole === 'admin' || newRole === 'hr_manager')) {
+    if (currentUser.role === 'employee' && (newRole === 'admin' || newRole === 'hr_manager' || newRole === 'viewer')) {
       const targetRoleName = roleTitles[newRole] || ROLE_DEFINITIONS[newRole].name;
       showToast(`${targetRoleName} option is disabled for Employee role.`, 'error');
       return;
